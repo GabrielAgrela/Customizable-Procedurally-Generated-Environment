@@ -9,8 +9,7 @@ using UnityEditor;
 
 public class PathCreator : MonoBehaviour
 {
-    public bool saveMesh;
-    
+
     [Header("General fields")]
     public GameObject finalDoor;
 
@@ -97,43 +96,9 @@ public class PathCreator : MonoBehaviour
 
         CleanUpScene();
         SpawnFinalDoor();
-        GameObject[] painters;
-        painters = GameObject.FindGameObjectsWithTag("PathPainter");
-        foreach (GameObject painter in painters)
-        {
-            GameObject.Find("Terrain(Clone)").GetComponent<MeshGenerator>().PaintHitTriangles(painter);
-        }
-        GameObject.Find("Terrain(Clone)").GetComponent<MeshGenerator>().SaveMeshAsAsset();
+        GameObject.Find("Terrain(Clone)").GetComponent<MeshGenerator>().TerrainFinishes();
         gameObject.SetActive(false);
-
-        #if UNITY_EDITOR
-        if (saveMesh)
-        {
-            // find gameobject terrain
-            GameObject terrain = GameObject.Find("Terrain(Clone)");
-            GameObject.Find("Terrain(Clone)").GetComponent<MeshGenerator>().SaveMeshAsAsset();
-            CreatePrefabFromGameObject("Assets/Prefab.prefab");
-        }
-        #endif
     }
-
-    #if UNITY_EDITOR
-    private void CreatePrefabFromGameObject(string path)
-    {
-        GameObject parentPrefab = new GameObject("ParentPrefab");
-
-        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>() ;
-        foreach(GameObject obj in allObjects)
-        {
-            if (obj.transform.parent == null) // avoid attaching child objects directly to the new parent
-            {
-                obj.transform.SetParent(parentPrefab.transform);
-            }
-        }
-        
-        PrefabUtility.SaveAsPrefabAsset(parentPrefab, path);
-    }
-    #endif
 
     private void CleanUpScene()
     {
