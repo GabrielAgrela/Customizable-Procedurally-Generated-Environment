@@ -18,17 +18,14 @@ public class NavigationBaker : MonoBehaviour {
         {
             surfaces [i].BuildNavMesh ();    
         }
-            StartCoroutine(DEBUGW());
-        
-        
+        StartCoroutine(CheckIfGenerationValid());
     }
-    IEnumerator DEBUGW()
+    IEnumerator CheckIfGenerationValid()
     {
-         yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(4);
         if (PathMaker.GetComponent<PathCreator>().CheckIfFinalPathIsValid()) 
         {
             GameObject.Find("Terrain(Clone)").GetComponent<SpawnVegetation>().SpawnObject();
-            //PathMaker.GetComponent<PathCreator>().GoToNextWaypoint();
         }
         else
         {
