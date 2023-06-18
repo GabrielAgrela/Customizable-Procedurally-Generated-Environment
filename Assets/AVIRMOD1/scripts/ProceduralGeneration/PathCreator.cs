@@ -6,36 +6,16 @@ using UnityEngine.AI;
 public class PathCreator : MonoBehaviour
 {
 
-    public MeshGenerator meshGenerator;
-    [Header("General fields")]
-    public GameObject finalDoor;
-
-    public GameObject itemToDrop;
-
-    [Header("Agent and navigation fields")]
-    private List<Vector3> lastPositions = new List<Vector3>();
-    public Vector3 pointPosition;
-    public Vector3 pointPositionLate;
-    public NavMeshAgent myNavMeshAgent;
-    public GameObject destination;
-
-    [Header("Milestones and environment objects")]
-    public GameObject grass;
-    public GameObject rock;
-    public GameObject bush;
-    public GameObject grassParent;
-    public GameObject rockParent;
-    public GameObject bushParent;
-
-    [Header("State and timing variables")]
-    public int x = 0;
-    public int milestoneIncrementCounter;
-    public bool finished = false;
+    [HideInInspector] public MeshGenerator meshGenerator;
+    [HideInInspector]private List<Vector3> lastPositions = new List<Vector3>();
+    [HideInInspector]public Vector3 pointPosition;
+    [HideInInspector]public NavMeshAgent myNavMeshAgent;
     private float itemToDropTimer = 0f;
-    
+    public GameObject itemToDrop;
     public void Start()
     {
         meshGenerator = GameObject.Find("Terrain(Clone)").GetComponent<MeshGenerator>();
+        myNavMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     // Destroy grass objects upon collision to keep the path clear
@@ -54,7 +34,6 @@ public class PathCreator : MonoBehaviour
 
     private void OnFinish(Collision collision)
     {
-        finished = true;
         Destroy(collision.gameObject);
         StartCoroutine(FinalPathPreparations(1));
     }

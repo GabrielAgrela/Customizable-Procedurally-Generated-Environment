@@ -4767,8 +4767,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3e65ada06e0204c9baf0658039b944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agentReady: 0
   minSize: -722
   maxSize: 910
+  saveGeneration: 0
   shoreColor: {r: 1, g: 0.3509255, b: 0, a: 0}
   shoreTime: 0.05
   fieldColor: {r: 1, g: 1, b: 1, a: 0}
@@ -4777,7 +4779,6 @@ MonoBehaviour:
   hillTime: 0.6
   PeakColor: {r: 0.13207549, g: 0.02875711, b: 0, a: 0}
   peakTime: 0.85
-  saveGeneration: 0
   granularity: 0.014
   Height: 29.56
   octaves: 9
@@ -4790,8 +4791,9 @@ MonoBehaviour:
   pathGradientInside: {r: 0.5377358, g: 0.20646533, b: 0.088777125, a: 0}
   pathGradientMiddle: {r: 0.6226415, g: 0.29153472, b: 0.17328231, a: 0}
   pathGradientOutside: {r: 0.6698113, g: 0.37790218, b: 0.2748754, a: 0}
-  numberOfWaypoints: 10
-  lateralDeviation: 10
+  numberOfWaypoints: 5
+  directDistance: 1300
+  lateralDeviation: 200
   waypointPrefab: {fileID: 143550061}
   waypoints: []
   Scout: {fileID: 6347984961915090732, guid: f9f8d429fdc3e7f4fbb93b9749ad5a3c, type: 3}
@@ -5998,21 +6000,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshGenerator: {fileID: 0}
-  finalDoor: {fileID: 6305365074536766693, guid: 5cde318469d5677459afd2bcddc8deab, type: 3}
-  itemToDrop: {fileID: 7118792675654729238, guid: 5903101b5dceb6743b44bb4825824b23, type: 3}
   pointPosition: {x: 0, y: 0, z: 0}
-  pointPositionLate: {x: 0, y: 0, z: 0}
   myNavMeshAgent: {fileID: 1738939506}
-  destination: {fileID: 277558983}
-  grass: {fileID: 2415146313088293920, guid: 0a04c12ab37b34b45bac5513fe3bf44a, type: 3}
-  rock: {fileID: 6201417577865561771, guid: 936441e8ad7465e409c2285b778dfd8f, type: 3}
-  bush: {fileID: 1064675501975936, guid: b00b4b56eca3251449675f6158e600cf, type: 3}
-  grassParent: {fileID: 1269797001}
-  rockParent: {fileID: 20993779}
-  bushParent: {fileID: 51404088}
-  x: 0
-  milestoneIncrementCounter: 0
-  finished: 0
+  itemToDrop: {fileID: 7118792675654729238, guid: 5903101b5dceb6743b44bb4825824b23, type: 3}
 --- !u!195 &1738939506
 NavMeshAgent:
   m_ObjectHideFlags: 0
