@@ -8,6 +8,9 @@ using UnityEditor;
 [RequireComponent(typeof(MeshFilter))]
 public class MeshGenerator : MonoBehaviour
 {
+
+    
+    
     // Mesh and its components
     private Mesh mesh;
     private Vector3[] vertices;
@@ -24,17 +27,30 @@ public class MeshGenerator : MonoBehaviour
     private float offSet;
     private bool lockBeg = false;
 
+    [HideInInspector] public bool agentReady = false; 
     // Terrain Bounds
     [HideInInspector]
     public int minSize = 0;
     [HideInInspector]
     public int maxSize = 0;
 
-    // Terrain Customization
-    [Header("Terrain Generation Customization")]
-
     [Tooltip("Save the whole generation into a prefab (will load for a couple of minutes at the end)")]
     public bool saveGeneration = false;
+
+    // Terrain Customization
+    [Header("Terrain Color Customization")]
+
+    // Define the gradient color spectrum for the terrain
+    [SerializeField] private Color shoreColor;
+    [SerializeField] private float shoreTime = 0.0f;
+    [SerializeField] private Color fieldColor;
+    [SerializeField] private float fieldTime = 0.1f;
+    [SerializeField] private Color hillColor;
+    [SerializeField] private float hillTime = 0.4f;
+    [SerializeField] private Color PeakColor;
+    [SerializeField] private float peakTime = 0.8f;
+
+    [Header("Terrain Generation Customization")]
     [Tooltip("Terrain Granularity")]
     public float granularity = 0.014f;
 
@@ -52,14 +68,34 @@ public class MeshGenerator : MonoBehaviour
 
     [Tooltip("Changes offsets' value to deterministically generate a new terrain")]
     public int seed = 1;
-    public bool randomSeed = false;
+    public bool randomSeed;
 
     [Tooltip("Spawnable Bridges")]
     public GameObject[] Bridges;
 
+    // Path Customization
+    [Header("_____________________________________________________________")]
+    [Header("Path Customization")]
+
+    [SerializeField] private Color pathGradientInside;
+    [SerializeField] private Color pathGradientMiddle;
+    [SerializeField] private Color pathGradientOutside;
+
+    [Tooltip("How many waypoints to generate")]
+    public int numberOfWaypoints;
+    [Tooltip("Straight distance between inicial pathmaker position and final waypoint")]
+    public int directDistance;
+    [Tooltip("How much of a deviation from the straight path is allowed on the waypoints")]
+    public float lateralDeviation;
+    public GameObject waypointPrefab;
+    [Tooltip("Waypoints spawned in between the inicial and final waypoints")]
+    public List<GameObject> waypoints = new List<GameObject>();
+
     // Terrain Helpers
     [Header("_____________________________________________________________")]
     [Header("Path and Helpers")]
+
+    
     public GameObject Scout;
     public GameObject PathDestination;
     public GameObject PathMaker;
@@ -73,30 +109,27 @@ public class MeshGenerator : MonoBehaviour
             seed = Random.Range(0, 1000000);
         }
         
-        makeGradient();
+        MakeGradient();
         ColdStart();
     }
 
-    public void makeGradient()
+    public void MakeGradient()
     {
-        Color brown = new Color(0.65f, 0.16f, 0.16f);
-        Color yellow = Color.yellow;
-
         GradientColorKey[] colorKey;
         GradientAlphaKey[] alphaKey;
 
-        // Populate the color keys at the relative height of 0, 0.25, 0.5, and 1
+        // Populate the color keys at the relative times
         colorKey = new GradientColorKey[4];
-        colorKey[0].color = yellow;
-        colorKey[0].time = 0.0f;
-        colorKey[1].color = Color.white;
-        colorKey[1].time = 0.1f;
-        colorKey[2].color = brown;
-        colorKey[2].time = 0.4f;
-        colorKey[3].color = Color.black;
-        colorKey[3].time = .8f;
+        colorKey[0].color = shoreColor;
+        colorKey[0].time = shoreTime;
+        colorKey[1].color = fieldColor;
+        colorKey[1].time = fieldTime;
+        colorKey[2].color = hillColor;
+        colorKey[2].time = hillTime;
+        colorKey[3].color = PeakColor;
+        colorKey[3].time = peakTime;
 
-        // Populate the alpha keys at the relative height of 0 and 1
+        // Populate the alpha keys at the relative times of 0 and 1
         alphaKey = new GradientAlphaKey[2];
         alphaKey[0].alpha = 1.0f;
         alphaKey[0].time = 0.0f;
@@ -109,7 +142,7 @@ public class MeshGenerator : MonoBehaviour
 
     public void ColdStart()
     {
-        
+        agentReady=false;
         lockBeg=false;
         UpdateMap();
         print("Mesh generated");
@@ -118,6 +151,8 @@ public class MeshGenerator : MonoBehaviour
         //SpawnRaycasts();
         PlacePathBeginning();
         print("Paths Placed");
+        GenerateWaypoints();
+        agentReady=true;
         transform.parent.transform.parent.gameObject.GetComponent<NavigationBaker>().buildNavMesh();
     }
 
@@ -160,6 +195,7 @@ public class MeshGenerator : MonoBehaviour
                     amplitude *= persistence;
                     frequency *= lacunarity;
                 }
+                
                 float y = Mathf.Pow(noiseHeight, 2f) * Height * edgeFactor;
                 // Record the minimum and maximum height
                 minHeight = Mathf.Min(minHeight, y);
@@ -284,6 +320,7 @@ public class MeshGenerator : MonoBehaviour
         
         while(true)
         {
+            directDistance--;
             int x = Random.Range(maxSize, minSize);
             int z = Random.Range(maxSize, minSize);
 
@@ -300,7 +337,7 @@ public class MeshGenerator : MonoBehaviour
                     // Proposed position for the finish
                     Vector3 finishPosition = new Vector3(x, ScoutPlaced.GetComponent<ScoutTerrain>().yPos, z);
                     // Check if the distance between PathMaker and Finish is more than 100
-                    if (Vector3.Distance(PathMaker.transform.position, finishPosition) > 1300)
+                    if (Vector3.Distance(PathMaker.transform.position, finishPosition) > directDistance)
                     {
                         lockBeg = true;
                         PathDestination.transform.position = finishPosition;
@@ -340,7 +377,47 @@ public class MeshGenerator : MonoBehaviour
         }
         return false; // No suitable position found
     }
+    void GenerateWaypoints()
+    {
+        Vector3 startPosition = PathMaker.transform.position;
+        Vector3 destinationPosition = PathDestination.transform.position;
+        float maxTerrainHeight = 500.0f; // Set this to the maximum possible height of your terrain features
 
+        Vector3 direction = (destinationPosition - startPosition).normalized;
+        Vector3 rightVector = Vector3.Cross(direction, Vector3.up);
+
+        for (int i = 0; i < numberOfWaypoints; i++)
+        {
+            float t = (float)(i + 1) / (numberOfWaypoints + 1); // Calculate interpolation factor
+
+            // Interpolate a position along the line from start to destination
+            Vector3 waypoint = Vector3.Lerp(startPosition, destinationPosition, t);
+
+            // Add some lateral deviation to make the path less straight
+            float lateralOffset = Random.Range(-lateralDeviation, lateralDeviation);
+            waypoint += lateralOffset * rightVector;
+
+            // Cast a ray downwards from the waypoint
+            RaycastHit hit;
+            if (Physics.Raycast(waypoint + Vector3.up * maxTerrainHeight, Vector3.down, out hit, maxTerrainHeight * 2))
+            {
+                // If the ray hit the ground, move the waypoint to the hit point
+                waypoint = hit.point;
+            }
+
+                // Instantiate a cube or another prefab at the waypoint for debugging
+                waypoints.Add(Instantiate(waypointPrefab, waypoint, Quaternion.identity));
+
+                // Add the waypoint
+            // waypoints.Add(waypoint);
+        }
+
+        // Add the final destination as the last waypoint
+        waypoints.Add(PathDestination);
+
+        // Instantiate a cube or another prefab at the final destination for debugging
+        Instantiate(waypointPrefab, destinationPosition, Quaternion.identity);
+    }
     // look for a suitable place to place the bridge
     // each bridge has scouts on the edges, telling me if it's hitting water or land,
     // if the middle scouts are hitting water, and the extremities hitting land, that means its a suitable place to place the bridge
@@ -426,9 +503,7 @@ public class MeshGenerator : MonoBehaviour
         }
 
         // Brown color
-        Color brown = new Color(0.64f, 0.16f, 0.16f);
-        Color lighterBrown = new Color(0.78f, 0.35f, 0.35f); // Lighter shade of brown
-        Color evenLighterBrown = new Color(0.86f, 0.58f, 0.58f); // Even lighter shade of brown
+        
 
         List<Triangle> hitTriangles = painter.GetComponent<RayCastHitVertex>().hitTriangles;
         HashSet<Triangle> hitTrianglesSet = new HashSet<Triangle>(hitTriangles);
@@ -485,25 +560,25 @@ public class MeshGenerator : MonoBehaviour
         // Color second surrounding triangles even lighter brown
         foreach (Triangle triangle in secondSurroundingTrianglesSet)
         {
-            colors[triangle.index1] = evenLighterBrown;
-            colors[triangle.index2] = evenLighterBrown;
-            colors[triangle.index3] = evenLighterBrown;
+            colors[triangle.index1] = pathGradientOutside;
+            colors[triangle.index2] = pathGradientOutside;
+            colors[triangle.index3] = pathGradientOutside;
         }
 
         // Color first surrounding triangles lighter brown
         foreach (Triangle triangle in firstSurroundingTrianglesSet)
         {
-            colors[triangle.index1] = lighterBrown;
-            colors[triangle.index2] = lighterBrown;
-            colors[triangle.index3] = lighterBrown;
+            colors[triangle.index1] = pathGradientMiddle;
+            colors[triangle.index2] = pathGradientMiddle;
+            colors[triangle.index3] = pathGradientMiddle;
         }
 
         // Then color the hit triangles brown
         foreach (Triangle triangle in hitTriangles)
         {
-            colors[triangle.index1] = brown;
-            colors[triangle.index2] = brown;
-            colors[triangle.index3] = brown;
+            colors[triangle.index1] = pathGradientInside;
+            colors[triangle.index2] = pathGradientInside;
+            colors[triangle.index3] = pathGradientInside;
         }
 
         // Assign the new colors to the mesh
@@ -548,7 +623,6 @@ public class MeshGenerator : MonoBehaviour
         
     }
     #endif
-
     #if UNITY_EDITOR
     private void CreatePrefabFromGameObject(string path)
     {

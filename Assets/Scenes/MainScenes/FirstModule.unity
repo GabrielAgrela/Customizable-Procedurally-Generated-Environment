@@ -4769,6 +4769,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSize: -722
   maxSize: 910
+  shoreColor: {r: 1, g: 0.3509255, b: 0, a: 0}
+  shoreTime: 0.05
+  fieldColor: {r: 1, g: 1, b: 1, a: 0}
+  fieldTime: 0.1
+  hillColor: {r: 0.3773585, g: 0.14967738, b: 0, a: 0}
+  hillTime: 0.6
+  PeakColor: {r: 0.13207549, g: 0.02875711, b: 0, a: 0}
+  peakTime: 0.85
   saveGeneration: 0
   granularity: 0.014
   Height: 29.56
@@ -4779,6 +4787,13 @@ MonoBehaviour:
   randomSeed: 1
   Bridges:
   - {fileID: 2090957774}
+  pathGradientInside: {r: 0.5377358, g: 0.20646533, b: 0.088777125, a: 0}
+  pathGradientMiddle: {r: 0.6226415, g: 0.29153472, b: 0.17328231, a: 0}
+  pathGradientOutside: {r: 0.6698113, g: 0.37790218, b: 0.2748754, a: 0}
+  numberOfWaypoints: 10
+  lateralDeviation: 10
+  waypointPrefab: {fileID: 143550061}
+  waypoints: []
   Scout: {fileID: 6347984961915090732, guid: f9f8d429fdc3e7f4fbb93b9749ad5a3c, type: 3}
   PathDestination: {fileID: 277558983}
   PathMaker: {fileID: 1738939503}
@@ -5982,8 +5997,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57f17a966f795194b97604866420253e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshGenerator: {fileID: 0}
   finalDoor: {fileID: 6305365074536766693, guid: 5cde318469d5677459afd2bcddc8deab, type: 3}
-  anchor: {fileID: 7118792675654729238, guid: 5903101b5dceb6743b44bb4825824b23, type: 3}
+  itemToDrop: {fileID: 7118792675654729238, guid: 5903101b5dceb6743b44bb4825824b23, type: 3}
   pointPosition: {x: 0, y: 0, z: 0}
   pointPositionLate: {x: 0, y: 0, z: 0}
   myNavMeshAgent: {fileID: 1738939506}
@@ -5997,9 +6013,6 @@ MonoBehaviour:
   x: 0
   milestoneIncrementCounter: 0
   finished: 0
-  TimeT: 0
-  TimeTotal: 0
-  counterTest: 0
 --- !u!195 &1738939506
 NavMeshAgent:
   m_ObjectHideFlags: 0

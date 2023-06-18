@@ -25,10 +25,10 @@ public class NavigationBaker : MonoBehaviour {
     IEnumerator DEBUGW()
     {
          yield return new WaitForSeconds(4);
-        if (PathMaker.GetComponent<PathCreator>().CheckIfPathIsValid()) 
+        if (PathMaker.GetComponent<PathCreator>().CheckIfFinalPathIsValid()) 
         {
             GameObject.Find("Terrain(Clone)").GetComponent<SpawnVegetation>().SpawnObject();
-            PathMaker.GetComponent<PathCreator>().DrawPath();
+            //PathMaker.GetComponent<PathCreator>().GoToNextWaypoint();
         }
         else
         {
