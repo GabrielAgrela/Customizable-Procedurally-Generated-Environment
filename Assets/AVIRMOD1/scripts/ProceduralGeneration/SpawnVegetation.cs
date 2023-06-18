@@ -15,11 +15,12 @@ public class Vegetation
 
 public class SpawnVegetation : MonoBehaviour
 {
-    public float SpawnHeight = 500.0f;
+    [HideInInspector]public float SpawnHeight = 500.0f;
+    [HideInInspector]public MeshGenerator meshGenerated;
     public GameObject parent;
     public Vegetation[] vegetations;
 
-    public MeshGenerator meshGenerated;
+     
 
     
     private float PerlinNoiseOctaves(float x, float y, int octaves, float persistence)

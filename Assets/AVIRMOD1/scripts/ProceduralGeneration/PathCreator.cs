@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class PathCreator : MonoBehaviour
 {
 
-    [HideInInspector] public MeshGenerator meshGenerator;
+    [HideInInspector]public MeshGenerator meshGenerator;
     [HideInInspector]private List<Vector3> lastPositions = new List<Vector3>();
     [HideInInspector]public Vector3 pointPosition;
     [HideInInspector]public NavMeshAgent myNavMeshAgent;

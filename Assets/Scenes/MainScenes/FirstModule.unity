@@ -4740,6 +4740,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnHeight: 350
+  meshGenerated: {fileID: 0}
   parent: {fileID: 20993779}
   vegetations:
   - prefab: {fileID: 2415146313088293920, guid: 0a04c12ab37b34b45bac5513fe3bf44a, type: 3}
@@ -4754,7 +4755,6 @@ MonoBehaviour:
     octaves: 4
     persistence: 0.5
     pocketThreshold: 0.4
-  meshGenerated: {fileID: 0}
 --- !u!114 &1242147631
 MonoBehaviour:
   m_ObjectHideFlags: 0
