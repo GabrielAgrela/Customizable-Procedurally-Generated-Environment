@@ -22,14 +22,19 @@ public class NavigationBaker : MonoBehaviour {
     }
     IEnumerator CheckIfGenerationValid()
     {
+         PathMaker.GetComponent<NavMeshAgent>().speed = 0;
+         TerrainMesh.GetComponent<MeshGenerator>().agentReady = false;
         yield return new WaitForSeconds(4);
         if (PathMaker.GetComponent<PathCreator>().CheckIfFinalPathIsValid()) 
         {
+            print("-------------Path is valid, generating------------------");
             GameObject.Find("Terrain(Clone)").GetComponent<SpawnVegetation>().SpawnObject();
+            PathMaker.GetComponent<NavMeshAgent>().speed = 50;
+            TerrainMesh.GetComponent<MeshGenerator>().agentReady = true;
         }
         else
         {
-            print("Path is not valid, trying again...");
+            print("-------------Path is not valid, trying again------------------");
             TerrainMesh.GetComponent<MeshGenerator>().seed += 124;
             TerrainMesh.GetComponent<MeshGenerator>().ColdStart();
         }
