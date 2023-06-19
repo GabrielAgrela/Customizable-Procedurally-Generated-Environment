@@ -10,12 +10,15 @@ public class PathCreator : MonoBehaviour
     [HideInInspector]private List<Vector3> lastPositions = new List<Vector3>();
     [HideInInspector]public Vector3 pointPosition;
     [HideInInspector]public NavMeshAgent myNavMeshAgent;
+
+    [HideInInspector]public GameObject ItemsDroppedParent;
     private float itemToDropTimer = 0f;
     public GameObject itemToDrop;
     public void Start()
     {
         meshGenerator = GameObject.Find("Terrain(Clone)").GetComponent<MeshGenerator>();
         myNavMeshAgent = GetComponent<NavMeshAgent>();
+        ItemsDroppedParent = GameObject.Find("ItemsDropped");
     }
 
     // Destroy grass objects upon collision to keep the path clear
@@ -62,7 +65,6 @@ public class PathCreator : MonoBehaviour
         // If the agent has reached a waypoint
         if (!myNavMeshAgent.pathPending && myNavMeshAgent.remainingDistance < 0.5f && meshGenerator.agentReady)
             GoToNextWaypoint();
-        
         itemToDropTimer += Time.deltaTime;
 
         // Instantiate environment objects along the path
@@ -71,8 +73,11 @@ public class PathCreator : MonoBehaviour
 
     public void GoToNextWaypoint()
     {
-        if (meshGenerator.waypoints.Count == 0) 
-        return;
+        if (meshGenerator.waypoints.Count == 1){
+            myNavMeshAgent.SetDestination(meshGenerator.waypoints[0].transform.position);
+            return;
+        }
+        
         myNavMeshAgent.SetDestination(meshGenerator.waypoints[0].transform.position);
         if (!CheckIfPathIsValid())
         {
@@ -103,7 +108,7 @@ public class PathCreator : MonoBehaviour
         // Instantiate itemToDrop every 2 seconds
         if (itemToDropTimer >= 2f && meshGenerator.agentReady)
         {
-            Instantiate(itemToDrop, transform.position, Quaternion.Euler(new Vector3(0, -AngleBetweenPathmakerPositions, 0)));
+            Instantiate(itemToDrop, transform.position, Quaternion.Euler(new Vector3(0, -AngleBetweenPathmakerPositions, 0)), ItemsDroppedParent.transform);
             itemToDropTimer = 0f;
         }
     }

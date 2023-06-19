@@ -25,7 +25,7 @@ public class MeshGenerator : MonoBehaviour
 
     // idfk
     private float offSet;
-    private bool lockBeg = false;
+    public Vector3 finishPosition;
 
     [HideInInspector] public bool agentReady = false; 
     // Terrain Bounds
@@ -113,6 +113,26 @@ public class MeshGenerator : MonoBehaviour
         ColdStart();
     }
 
+    public void CleanGeneration()
+    {
+        GameObject Temporary = GameObject.Find("Temporary");
+        GameObject TrailPaintersParent = GameObject.Find("TrailPainters");
+        // Destroy all the children gameobjects of the temporary gameobject
+        foreach (Transform temporaryChild in Temporary.transform)
+        {
+            foreach (Transform child in temporaryChild)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        waypoints.Clear();
+
+        foreach (Transform child in TrailPaintersParent.transform)
+        {
+            child.gameObject.GetComponent<RayCastHitVertex>().hitTriangles.Clear();
+        }
+    }
+
     public void MakeGradient()
     {
         GradientColorKey[] colorKey;
@@ -142,18 +162,21 @@ public class MeshGenerator : MonoBehaviour
 
     public void ColdStart()
     {
-        agentReady=false;
-        lockBeg=false;
+       
+        CleanGeneration();
+        print("Cleanead Generation");
         UpdateMap();
         print("Mesh generated");
         CleanFinish();
         print("Painters Cleaned");
         //SpawnRaycasts();
-        PlacePathBeginning();
+        PlacePathMarks();
         print("Paths Placed");
         GenerateWaypoints();
-        agentReady=true;
         transform.parent.transform.parent.gameObject.GetComponent<NavigationBaker>().buildNavMesh();
+        // clear PathMaker.GetComponent<NavMeshAgent>() destination
+        
+
     }
 
     public void UpdateMap()
@@ -283,44 +306,60 @@ public class MeshGenerator : MonoBehaviour
         }
     }
 
-    public void PlacePathBeginning()
+    public void PlacePathMarks()
     {
-        GameObject ScoutPlaced;
-        ScoutPlaced = Instantiate (Scout, new Vector3(500, 300, 500), Quaternion.identity);
-
-
-        int x = Random.Range(maxSize, minSize);
-        int z = Random.Range(maxSize, minSize);
-
-        ScoutPlaced.transform.position = new Vector3(x, 300f, z);
-        ScoutPlaced.GetComponent<ScoutTerrain>().checkIsInWater();
-
-        if (ScoutPlaced.GetComponent<ScoutTerrain>().isInWater == false)
+        PathMaker.GetComponent<NavMeshAgent>().enabled = false;
+        while(true)
         {
-            bool isSuitablePlace = CheckSurroundingArea(x, z, ScoutPlaced);
-            if (isSuitablePlace && lockBeg==false)
+            directDistance--;
+            PlacePathBeginning();
+            PlacePathEnd();
+            GameObject MarksParent = GameObject.Find("Marks");
+            if (Vector3.Distance(PathMaker.transform.position, finishPosition) > directDistance)
             {
-                
-                PathMaker.transform.position = new Vector3(x, ScoutPlaced.GetComponent<ScoutTerrain>().yPos, z);
-                Destroy(ScoutPlaced);
-                PlacePathEnd();
+                PathDestination.transform.position = finishPosition;
+                Instantiate(Finish, finishPosition, Quaternion.identity, MarksParent.transform);
+                PathMaker.GetComponent<NavMeshAgent>().enabled = true;
                 return;
             }
         }
-        Destroy(ScoutPlaced);
-        PlacePathBeginning();
-    }   
 
-    // start searching from one corner of the scene for land using my scout (scout is a cube with a vertical downraycasts that tell me if it's hitting water or terrain)
-    // if he finds terrain, place marker there.
+    }
+    public void PlacePathBeginning()
+    {
+        while(true)
+        {
+            GameObject ScoutPlaced;
+            ScoutPlaced = Instantiate (Scout, new Vector3(500, 300, 500), Quaternion.identity);
+
+
+            int x = Random.Range(maxSize, minSize);
+            int z = Random.Range(maxSize, minSize);
+
+            ScoutPlaced.transform.position = new Vector3(x, 300f, z);
+            ScoutPlaced.GetComponent<ScoutTerrain>().checkIsInWater();
+
+            if (ScoutPlaced.GetComponent<ScoutTerrain>().isInWater == false)
+            {
+                bool isSuitablePlace = CheckSurroundingArea(x, z, ScoutPlaced);
+                if (isSuitablePlace)
+                {
+                    PathMaker.transform.position = new Vector3(x, ScoutPlaced.GetComponent<ScoutTerrain>().yPos, z);
+                    Destroy(ScoutPlaced);
+                    return;
+                }
+            }
+            Destroy(ScoutPlaced);
+        }
+    }   
     public void PlacePathEnd()
     {
         GameObject ScoutPlaced;
+        
         ScoutPlaced = Instantiate (Scout, new Vector3(minSize, 100, minSize), Quaternion.identity);
         
         while(true)
         {
-            directDistance--;
             int x = Random.Range(maxSize, minSize);
             int z = Random.Range(maxSize, minSize);
 
@@ -332,27 +371,17 @@ public class MeshGenerator : MonoBehaviour
                 bool isSuitablePlace = CheckSurroundingArea(x, z, ScoutPlaced);
                 if (isSuitablePlace)
                 {
-                    ScoutPlaced.transform.position = new Vector3(x, 300, z);
-                    ScoutPlaced.GetComponent<ScoutTerrain>().checkIsInWater();
                     // Proposed position for the finish
-                    Vector3 finishPosition = new Vector3(x, ScoutPlaced.GetComponent<ScoutTerrain>().yPos, z);
+                    finishPosition = new Vector3(x, ScoutPlaced.GetComponent<ScoutTerrain>().yPos, z);
+                    Destroy(ScoutPlaced);
+                    return;
                     // Check if the distance between PathMaker and Finish is more than 100
-                    if (Vector3.Distance(PathMaker.transform.position, finishPosition) > directDistance)
-                    {
-                        lockBeg = true;
-                        PathDestination.transform.position = finishPosition;
-                        Instantiate(Finish, finishPosition, Quaternion.identity);
-                        return;
-                    }
-                    else
-                    {
-                        Destroy(ScoutPlaced);
-                        PlacePathBeginning();
-                        return;
-                    }
+                    
                 }
             }
+            Destroy(ScoutPlaced);
         }
+        
     }
     private bool CheckSurroundingArea(int x, int z, GameObject scout)
     {
@@ -379,6 +408,7 @@ public class MeshGenerator : MonoBehaviour
     }
     void GenerateWaypoints()
     {
+        GameObject waypointsParent= GameObject.Find("Waypoints");
         Vector3 startPosition = PathMaker.transform.position;
         Vector3 destinationPosition = PathDestination.transform.position;
         float maxTerrainHeight = 500.0f; // Set this to the maximum possible height of your terrain features
@@ -406,7 +436,7 @@ public class MeshGenerator : MonoBehaviour
             }
 
                 // Instantiate a cube or another prefab at the waypoint for debugging
-                waypoints.Add(Instantiate(waypointPrefab, waypoint, Quaternion.identity));
+                waypoints.Add(Instantiate(waypointPrefab, waypoint, Quaternion.identity, waypointsParent.transform));
 
                 // Add the waypoint
             // waypoints.Add(waypoint);
@@ -416,7 +446,7 @@ public class MeshGenerator : MonoBehaviour
         waypoints.Add(PathDestination);
 
         // Instantiate a cube or another prefab at the final destination for debugging
-        Instantiate(waypointPrefab, destinationPosition, Quaternion.identity);
+        Instantiate(waypointPrefab, destinationPosition, Quaternion.identity, waypointsParent.transform);
     }
     // look for a suitable place to place the bridge
     // each bridge has scouts on the edges, telling me if it's hitting water or land,
