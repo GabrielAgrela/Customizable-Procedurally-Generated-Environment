@@ -126,7 +126,7 @@ public class MeshGenerator : MonoBehaviour
             }
         }
         waypoints.Clear();
-
+        PathMaker.GetComponent<PathCreator>().pathCoordinates.Clear();
         foreach (Transform child in TrailPaintersParent.transform)
         {
             child.gameObject.GetComponent<RayCastHitVertex>().hitTriangles.Clear();
@@ -159,10 +159,8 @@ public class MeshGenerator : MonoBehaviour
         gradient = new Gradient();
         gradient.SetKeys(colorKey, alphaKey);
     }
-
     public void ColdStart()
     {
-       
         CleanGeneration();
         print("Cleanead Generation");
         UpdateMap();
@@ -175,10 +173,7 @@ public class MeshGenerator : MonoBehaviour
         GenerateWaypoints();
         transform.parent.transform.parent.gameObject.GetComponent<NavigationBaker>().buildNavMesh();
         // clear PathMaker.GetComponent<NavMeshAgent>() destination
-        
-
     }
-
     public void UpdateMap()
     {
         seedToOffsets();
@@ -187,13 +182,11 @@ public class MeshGenerator : MonoBehaviour
         CreateShape();
         UpdateMesh();
     }
-
     // extra layer of calibration of the pseudorandom terrain
     void seedToOffsets()
     {
         offSet=seed/2;
     }
-
     // Creates the mesh for the terrain
     void CreateShape()
     {
@@ -262,7 +255,6 @@ public class MeshGenerator : MonoBehaviour
         }
         mesh.colors = colors;
     }
-
     void UpdateMesh()
     {
         mesh.Clear();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PathCreator : MonoBehaviour
+public class MiniPathCreator : MonoBehaviour
 {
 
     [HideInInspector]public MeshGenerator meshGenerator;
@@ -11,16 +11,20 @@ public class PathCreator : MonoBehaviour
     [HideInInspector]public Vector3 pointPosition;
     [HideInInspector]public NavMeshAgent myNavMeshAgent;
     [HideInInspector]public GameObject ItemsDroppedParent;
-    public GameObject miniPathMaker;
     public List<Vector3> pathCoordinates = new List<Vector3>();
     private float itemToDropTimer = 0f;
     private float saveCoordinateTimer = 0f;
     public GameObject itemToDrop;
+    public GameObject Scout;
+    public GameObject Destination;
+
+    public GameObject placedDestination;
     public void Start()
     {
         meshGenerator = GameObject.Find("Terrain(Clone)").GetComponent<MeshGenerator>();
         myNavMeshAgent = GetComponent<NavMeshAgent>();
         ItemsDroppedParent = GameObject.Find("ItemsDropped");
+        PlaceDestination();
     }
 
     // Destroy grass objects upon collision to keep the path clear
@@ -33,7 +37,9 @@ public class PathCreator : MonoBehaviour
 
         if (collision.gameObject.CompareTag("finish"))
         {
-            OnFinish(collision);
+            Destroy(collision.gameObject);
+            StartCoroutine(FinalPathPreparations(1));
+            
         }
     }
 
@@ -46,28 +52,16 @@ public class PathCreator : MonoBehaviour
     private IEnumerator FinalPathPreparations(int secs)
     {
         yield return new WaitForSeconds(secs);
-
-        CleanUpScene();
-        Instantiate (miniPathMaker, pathCoordinates[0], Quaternion.identity);    
         
-        //gameObject.SetActive(false);
-    }
-    private void CleanUpScene()
-    {
-        foreach (GameObject grass in GameObject.FindGameObjectsWithTag("grass"))
-        {
-            Destroy(grass.GetComponent<Collider>());
-            Destroy(grass.GetComponent<Rigidbody>());
-        }
-        //GameObject.Find("BridgeRock").transform.position = new Vector3(GameObject.Find("BridgeRock").transform.position.x, GameObject.Find("BridgeRock").transform.position.y + 1.0f, GameObject.Find("BridgeRock").transform.position.z);
+        meshGenerator.PaintHitTriangles(transform.GetChild(0).transform.GetChild(0).gameObject);
+        meshGenerator.TerrainFinishes();
+        GameObject.Find("PathMaker").SetActive(false);
+        gameObject.SetActive(false);
     }
     
     // Update the path and related objects based on the agent's current state
     private void FixedUpdate()
-    {
-        // If the agent has reached a waypoint
-        if (!myNavMeshAgent.pathPending && myNavMeshAgent.remainingDistance < 0.5f && meshGenerator.agentReady)
-            GoToNextWaypoint();
+    {       
         itemToDropTimer += Time.deltaTime;
         saveCoordinateTimer += Time.deltaTime;
         if (saveCoordinateTimer >= 2f && meshGenerator.agentReady)
@@ -75,33 +69,22 @@ public class PathCreator : MonoBehaviour
             pathCoordinates.Add(transform.position);
             saveCoordinateTimer = 0f;
         }
-
         // Instantiate environment objects along the path
         DropItem(GetAgentAngle());
+        /*if (myNavMeshAgent.remainingDistance <= 5f)
+        {
+            StartCoroutine(FinalPathPreparations(1));
+        }*/
     }
 
-    public void GoToNextWaypoint()
+    public void DrawPath()
     {
-        if (meshGenerator.waypoints.Count == 1){
-            myNavMeshAgent.SetDestination(meshGenerator.waypoints[0].transform.position);
-            return;
-        }
-        
-        myNavMeshAgent.SetDestination(meshGenerator.waypoints[0].transform.position);
-        if (!CheckIfPathIsValid())
-        {
-            meshGenerator.waypoints.RemoveAt(0);
-            GoToNextWaypoint();
-        }
-        else
-        {
-            meshGenerator.waypoints.RemoveAt(0);
-        }
+        myNavMeshAgent.SetDestination(placedDestination.transform.position);
     }
     public bool CheckIfPathIsValid()
     {
         NavMeshPath path = new NavMeshPath();
-        if (myNavMeshAgent.CalculatePath(meshGenerator.waypoints[0].transform.position, path))
+        if (myNavMeshAgent.CalculatePath(Destination.transform.position, path))
         {
             if (path.status == NavMeshPathStatus.PathComplete)
             {
@@ -152,17 +135,84 @@ public class PathCreator : MonoBehaviour
         return Mathf.Atan2(positionFrom10IterationsBefore.z - pointPosition.z, positionFrom10IterationsBefore.x - pointPosition.x) * 180 / Mathf.PI;
     }
 
-    public bool CheckIfFinalPathIsValid()
+    public void PlaceDestination()
+{
+    GameObject ScoutPlaced;
+    var pathMaker = GameObject.Find("PathMaker");
+    if (pathMaker == null)
     {
-        NavMeshPath path = new NavMeshPath();
-        if (myNavMeshAgent.CalculatePath(meshGenerator.waypoints[meshGenerator.waypoints.Count - 1].transform.position, path))
+        Debug.LogError("No object named PathMaker found");
+        return;
+    }
+
+    var pathCreator = pathMaker.GetComponent<PathCreator>();
+    if (pathCreator == null)
+    {
+        Debug.LogError("No PathCreator component found in PathMaker");
+        return;
+    }
+    placedDestination = Instantiate(Destination, new Vector3(0,0,0), Quaternion.identity);
+
+    List<Vector3> pathCoordinates = pathCreator.pathCoordinates;
+    int distanceToBeat = 200;
+    int maxIterations = 1000;
+    int currentIteration = 0;
+
+    while (currentIteration++ < maxIterations)
+    {
+        int x = Random.Range(meshGenerator.minSize, meshGenerator.maxSize);
+        int z = Random.Range(meshGenerator.minSize, meshGenerator.maxSize);
+
+        ScoutPlaced = Instantiate(Scout, new Vector3(x, 300, z), Quaternion.identity);
+        ScoutPlaced.GetComponent<ScoutTerrain>().checkIsInWater();
+
+        if (ScoutPlaced.GetComponent<ScoutTerrain>().isInWater == false)
         {
-            if (path.status == NavMeshPathStatus.PathComplete)
+            Vector3 proposedPosition = new Vector3(x, ScoutPlaced.GetComponent<ScoutTerrain>().yPos, z);
+            float closestDistance = float.MaxValue;
+            Vector3 closestCoordinate = Vector3.zero;
+
+            foreach (var coordinate in pathCoordinates)
             {
-                return true;
+                float distance = Vector3.Distance(proposedPosition, coordinate);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestCoordinate = coordinate;
+                }
+            }
+
+            bool validPath = false;
+            NavMeshPath path = new NavMeshPath();
+
+            if (closestDistance > distanceToBeat && closestDistance< 1000)
+            {
+                if (myNavMeshAgent.CalculatePath(closestCoordinate, path))
+                {
+                    validPath = true;
+                }
+            }
+
+            if (validPath)
+            {
+                GetComponent<NavMeshAgent>().enabled = false;
+                transform.position = closestCoordinate;
+                placedDestination.transform.position = proposedPosition;
+                GetComponent<NavMeshAgent>().enabled = true;
+                print("closestDistance: " + closestDistance+ "currentIteration " + currentIteration);
+                print("Calculatepath "+myNavMeshAgent.CalculatePath(closestCoordinate, path));
+                Destroy(ScoutPlaced);
+                DrawPath();
+                return;
             }
         }
-        return false;
+        Destroy(ScoutPlaced);
     }
+    Debug.LogWarning("Failed to place destination after " + maxIterations + " attempts");
+}
+
+
+
+
 }
 

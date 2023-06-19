@@ -4466,12 +4466,12 @@ MonoBehaviour:
   randomSeed: 1
   Bridges:
   - {fileID: 2090957774}
-  pathGradientInside: {r: 0.4433962, g: 0.16445728, b: 0.064836234, a: 0}
-  pathGradientMiddle: {r: 0.6698113, g: 0.35921997, b: 0.24959949, a: 0}
-  pathGradientOutside: {r: 0.764151, g: 0.47775495, b: 0.378471, a: 0}
+  pathGradientInside: {r: 0.31132078, g: 0.099536374, b: 0.024964407, a: 0}
+  pathGradientMiddle: {r: 0.5754717, g: 0.28486913, b: 0.18187076, a: 0}
+  pathGradientOutside: {r: 0.6603774, g: 0.37033388, b: 0.27100393, a: 0}
   numberOfWaypoints: 5
   directDistance: 2000
-  lateralDeviation: 200
+  lateralDeviation: 400
   waypointPrefab: {fileID: 143550061}
   waypoints: []
   Scout: {fileID: 6347984961915090732, guid: f9f8d429fdc3e7f4fbb93b9749ad5a3c, type: 3}
@@ -5742,6 +5742,8 @@ MonoBehaviour:
   pointPosition: {x: 0, y: 0, z: 0}
   myNavMeshAgent: {fileID: 1738939506}
   ItemsDroppedParent: {fileID: 0}
+  miniPathMaker: {fileID: 3801240290076615200, guid: c7379b22cf2c88e4a8cfc654432e6b30, type: 3}
+  pathCoordinates: []
   itemToDrop: {fileID: 7118792675654729238, guid: 5903101b5dceb6743b44bb4825824b23, type: 3}
 --- !u!195 &1738939506
 NavMeshAgent:
