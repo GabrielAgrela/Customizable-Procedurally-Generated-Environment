@@ -91,6 +91,9 @@ public class MeshGenerator : MonoBehaviour
     [Tooltip("Waypoints spawned in between the inicial and final waypoints")]
     public List<GameObject> waypoints = new List<GameObject>();
 
+    public int numMiniPaths;
+    private int numMiniPathsFinished = 0;
+
     // Terrain Helpers
     [Header("_____________________________________________________________")]
     [Header("Path and Helpers")]
@@ -504,7 +507,7 @@ public class MeshGenerator : MonoBehaviour
         #endif
     }
 
-    public void PaintHitTriangles(GameObject painter)
+    public void PaintHitTriangles(GameObject painter, bool isMiniPath=false)
     {
         // Check if we have a mesh to paint
         if (mesh == null)
@@ -559,33 +562,37 @@ public class MeshGenerator : MonoBehaviour
             }
         }
 
-        // Get second surrounding triangles
-        foreach (Triangle triangle in allTriangles)
+        if (!isMiniPath)
         {
-            if (!hitTrianglesSet.Contains(triangle) && !firstSurroundingTrianglesSet.Contains(triangle))
+            // Get second surrounding triangles
+            foreach (Triangle triangle in allTriangles)
             {
-                foreach (Triangle surroundingTriangle in firstSurroundingTrianglesSet)
+                if (!hitTrianglesSet.Contains(triangle) && !firstSurroundingTrianglesSet.Contains(triangle))
                 {
-                    // Check if triangle and surroundingTriangle share an edge
-                    if (TrianglesShareEdge(triangle, surroundingTriangle))
+                    foreach (Triangle surroundingTriangle in firstSurroundingTrianglesSet)
                     {
-                        // Add to the second surrounding triangles set
-                        secondSurroundingTrianglesSet.Add(triangle);
+                        // Check if triangle and surroundingTriangle share an edge
+                        if (TrianglesShareEdge(triangle, surroundingTriangle))
+                        {
+                            // Add to the second surrounding triangles set
+                            secondSurroundingTrianglesSet.Add(triangle);
 
-                        // Skip to the next triangle as we've already added this one
-                        break;
+                            // Skip to the next triangle as we've already added this one
+                            break;
+                        }
                     }
                 }
             }
-        }
 
-        // Color second surrounding triangles even lighter brown
-        foreach (Triangle triangle in secondSurroundingTrianglesSet)
-        {
-            colors[triangle.index1] = pathGradientOutside;
-            colors[triangle.index2] = pathGradientOutside;
-            colors[triangle.index3] = pathGradientOutside;
+            // Color second surrounding triangles even lighter brown
+            foreach (Triangle triangle in secondSurroundingTrianglesSet)
+            {
+                colors[triangle.index1] = pathGradientOutside;
+                colors[triangle.index2] = pathGradientOutside;
+                colors[triangle.index3] = pathGradientOutside;
+            }
         }
+        
 
         // Color first surrounding triangles lighter brown
         foreach (Triangle triangle in firstSurroundingTrianglesSet)
@@ -635,7 +642,6 @@ public class MeshGenerator : MonoBehaviour
     #if UNITY_EDITOR
     public void SaveGeneration()
     {
-        print("geb");
         if (saveGeneration)
         {
             // find gameobject terrain
@@ -662,4 +668,15 @@ public class MeshGenerator : MonoBehaviour
         PrefabUtility.SaveAsPrefabAsset(parentPrefab, path);
     }
     #endif
+
+    public void NotifyFinish(GameObject painter)
+    {
+        
+        numMiniPathsFinished++;
+        PaintHitTriangles(painter,true);
+        if (numMiniPathsFinished == numMiniPaths)
+        {
+            TerrainFinishes();
+        }
+    }
 }

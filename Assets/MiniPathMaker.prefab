@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3801240288677102555}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6, y: -0, z: 0}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 0.3988426, y: 0.9152217, z: 1.0395273}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -254,6 +254,9 @@ MonoBehaviour:
   myNavMeshAgent: {fileID: 0}
   ItemsDroppedParent: {fileID: 0}
   pathCoordinates: []
-  itemToDrop: {fileID: 7118792675654729238, guid: 5903101b5dceb6743b44bb4825824b23, type: 3}
+  itemToDropRate: 1
+  itemToDrop: {fileID: 7118792675654729238, guid: 53c014be994a5bf4e96cb642645bb1bb, type: 3}
   Scout: {fileID: 6347984961915090732, guid: f9f8d429fdc3e7f4fbb93b9749ad5a3c, type: 3}
   Destination: {fileID: 6379355315568903729, guid: 2db9504400417f148a00a4a6803340eb, type: 3}
+  minPathDistance: 200
+  maxPathDistance: 1000

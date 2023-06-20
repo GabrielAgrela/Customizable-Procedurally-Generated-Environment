@@ -14,8 +14,11 @@ public class PathCreator : MonoBehaviour
     public GameObject miniPathMaker;
     public List<Vector3> pathCoordinates = new List<Vector3>();
     private float itemToDropTimer = 0f;
+    public  float itemToDropRate;
     private float saveCoordinateTimer = 0f;
     public GameObject itemToDrop;
+
+    public bool finished = false;
     public void Start()
     {
         meshGenerator = GameObject.Find("Terrain(Clone)").GetComponent<MeshGenerator>();
@@ -48,9 +51,12 @@ public class PathCreator : MonoBehaviour
         yield return new WaitForSeconds(secs);
 
         CleanUpScene();
-        Instantiate (miniPathMaker, pathCoordinates[0], Quaternion.identity);    
-        
-        //gameObject.SetActive(false);
+        for (int i = 0; i< meshGenerator.numMiniPaths; i++)
+        {
+            Instantiate(miniPathMaker, pathCoordinates[0], Quaternion.identity);
+        }
+
+        finished = true;
     }
     private void CleanUpScene()
     {
@@ -115,7 +121,7 @@ public class PathCreator : MonoBehaviour
     private void DropItem(float AngleBetweenPathmakerPositions)
     {
         // Instantiate itemToDrop every 2 seconds
-        if (itemToDropTimer >= 2f && meshGenerator.agentReady)
+        if (itemToDropTimer >= itemToDropRate && meshGenerator.agentReady && !finished)
         {
             Instantiate(itemToDrop, transform.position, Quaternion.Euler(new Vector3(0, -AngleBetweenPathmakerPositions, 0)), ItemsDroppedParent.transform);
             itemToDropTimer = 0f;

@@ -1527,7 +1527,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 349044116}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6, y: -0, z: 0}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 0.3988426, y: 0.9152217, z: 1.0395273}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4474,6 +4474,7 @@ MonoBehaviour:
   lateralDeviation: 400
   waypointPrefab: {fileID: 143550061}
   waypoints: []
+  numMiniPaths: 3
   Scout: {fileID: 6347984961915090732, guid: f9f8d429fdc3e7f4fbb93b9749ad5a3c, type: 3}
   PathDestination: {fileID: 277558983}
   PathMaker: {fileID: 1738939503}
@@ -5744,7 +5745,9 @@ MonoBehaviour:
   ItemsDroppedParent: {fileID: 0}
   miniPathMaker: {fileID: 3801240290076615200, guid: c7379b22cf2c88e4a8cfc654432e6b30, type: 3}
   pathCoordinates: []
+  itemToDropRate: 2
   itemToDrop: {fileID: 7118792675654729238, guid: 5903101b5dceb6743b44bb4825824b23, type: 3}
+  finished: 0
 --- !u!195 &1738939506
 NavMeshAgent:
   m_ObjectHideFlags: 0

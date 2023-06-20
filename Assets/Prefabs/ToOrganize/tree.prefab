@@ -10,10 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7601294815129320082}
   - component: {fileID: 3963130881853153940}
-  - component: {fileID: 5760774363083714751}
   - component: {fileID: 4140222948906154916}
   - component: {fileID: 4283962079137574564}
-  - component: {fileID: 1164930112123609515}
   m_Layer: 7
   m_Name: tree
   m_TagString: grass
@@ -53,35 +51,19 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.39220762
+  - screenRelativeHeight: 0.69783264
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 8371789361930983463}
-  - screenRelativeHeight: 0.31378394
+  - screenRelativeHeight: 0.44625294
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 6503446975360757728}
-  - screenRelativeHeight: 0.005807611
+  - screenRelativeHeight: 0.13522385
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 988682482526247920}
   m_Enabled: 1
---- !u!114 &5760774363083714751
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7488298240707488550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_OverrideArea: 1
-  m_Area: 1
-  m_IgnoreFromBuild: 0
-  m_AffectedAgents: ffffffff
 --- !u!65 &4140222948906154916
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -107,22 +89,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49a2f42850b8f2646806837300eb149e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1164930112123609515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7488298240707488550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Size: {x: 4, y: 3, z: 4}
-  m_Center: {x: 0, y: 1, z: 0}
-  m_Area: 1
-  m_AffectedAgents: ffffffff
 --- !u!1001 &988682482524341136
 PrefabInstance:
   m_ObjectHideFlags: 0

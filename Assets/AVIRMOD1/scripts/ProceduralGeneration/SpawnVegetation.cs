@@ -69,7 +69,7 @@ public class SpawnVegetation : MonoBehaviour
                     if (Physics.Raycast(spawnPosition, Vector3.down, out hit, 500f))
                     {
                         if (hit.transform.gameObject.tag != "water")
-                            Instantiate(vegetation.prefab, new Vector3 (hit.point.x, hit.point.y, hit.point.z), Quaternion.Euler(new Vector3(0, Random.Range(0, 360), 0)), parent.transform);
+                            Instantiate(vegetation.prefab, new Vector3 (hit.point.x, hit.point.y, hit.point.z), Quaternion.Euler(new Vector3(0, Random.Range(-36, 36), 0)), parent.transform);
                     }
                 }
             }

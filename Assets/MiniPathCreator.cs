@@ -11,14 +11,20 @@ public class MiniPathCreator : MonoBehaviour
     [HideInInspector]public Vector3 pointPosition;
     [HideInInspector]public NavMeshAgent myNavMeshAgent;
     [HideInInspector]public GameObject ItemsDroppedParent;
+    private GameObject placedDestination;
     public List<Vector3> pathCoordinates = new List<Vector3>();
-    private float itemToDropTimer = 0f;
+
+    public float itemToDropRate;
+    private float itemToDropTimer=0f;
     private float saveCoordinateTimer = 0f;
     public GameObject itemToDrop;
     public GameObject Scout;
     public GameObject Destination;
 
-    public GameObject placedDestination;
+    public int minPathDistance;
+    public int maxPathDistance;
+
+    
     public void Start()
     {
         meshGenerator = GameObject.Find("Terrain(Clone)").GetComponent<MeshGenerator>();
@@ -53,9 +59,8 @@ public class MiniPathCreator : MonoBehaviour
     {
         yield return new WaitForSeconds(secs);
         
-        meshGenerator.PaintHitTriangles(transform.GetChild(0).transform.GetChild(0).gameObject);
-        meshGenerator.TerrainFinishes();
-        GameObject.Find("PathMaker").SetActive(false);
+        
+        meshGenerator.NotifyFinish(transform.GetChild(0).transform.GetChild(0).gameObject);
         gameObject.SetActive(false);
     }
     
@@ -98,7 +103,7 @@ public class MiniPathCreator : MonoBehaviour
     private void DropItem(float AngleBetweenPathmakerPositions)
     {
         // Instantiate itemToDrop every 2 seconds
-        if (itemToDropTimer >= 2f && meshGenerator.agentReady)
+        if (itemToDropTimer >= itemToDropRate && meshGenerator.agentReady)
         {
             Instantiate(itemToDrop, transform.position, Quaternion.Euler(new Vector3(0, -AngleBetweenPathmakerPositions, 0)), ItemsDroppedParent.transform);
             itemToDropTimer = 0f;
@@ -154,7 +159,6 @@ public class MiniPathCreator : MonoBehaviour
     placedDestination = Instantiate(Destination, new Vector3(0,0,0), Quaternion.identity);
 
     List<Vector3> pathCoordinates = pathCreator.pathCoordinates;
-    int distanceToBeat = 200;
     int maxIterations = 1000;
     int currentIteration = 0;
 
@@ -184,8 +188,9 @@ public class MiniPathCreator : MonoBehaviour
 
             bool validPath = false;
             NavMeshPath path = new NavMeshPath();
-
-            if (closestDistance > distanceToBeat && closestDistance< 1000)
+            minPathDistance++;
+            maxPathDistance--;
+            if (closestDistance > minPathDistance && closestDistance< maxPathDistance)
             {
                 if (myNavMeshAgent.CalculatePath(closestCoordinate, path))
                 {
