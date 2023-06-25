@@ -638,6 +638,8 @@ public class MeshGenerator : MonoBehaviour
         #if UNITY_EDITOR
             SaveGeneration();
         #endif
+
+        PathMaker.SetActive(false);
     }
     #if UNITY_EDITOR
     public void SaveGeneration()
