@@ -25,7 +25,9 @@ public class MeshGenerator : MonoBehaviour
 
     // idfk
     private float offSet;
-    public Vector3 finishPosition;
+
+    
+    [HideInInspector] public Vector3 finishPosition;
 
     [HideInInspector] public bool agentReady = false; 
     // Terrain Bounds
