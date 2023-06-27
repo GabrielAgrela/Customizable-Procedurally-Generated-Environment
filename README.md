@@ -1,7 +1,5 @@
 
-    <h1>Customizable Procedurally Generated Environment</h1>
-    <p>Watch our small demo <a href="https://youtu.be/niXPKbuWB7I">here</a>.</p>
-
+<body>
     <h2>Mesh Generator</h2>
     <ul>
         <li><strong>Terrain Coloration:</strong> Attribute a color and a time to define when and what color that part of the mesh will be, in that normalized height. Note that the color is additive, not absolute.</li>
@@ -28,7 +26,6 @@
             </ul>
         </li>
     </ul>
-
     <h2>Spawn Vegetation</h2>
     <p>Create new vegetation by clicking on the plus icon, and define the following:</p>
     <ul>
@@ -39,9 +36,10 @@
         <li><strong>Persistence:</strong> The higher the value, the more the terrain will be affected by the octaves.</li>
         <li><strong>Pocket Threshold:</strong> The higher the value, the more likely the object will spawn in a pocket.</li>
     </ul>
-
     <h2>Path Creator</h2>
     <ul>
         <li><strong>Item Drop Rate:</strong> Determine how frequently an item will spawn.</li>
         <li><strong>Item to Drop:</strong> Specify which, if any, item to drop.</li>
     </ul>
+</body>
+
