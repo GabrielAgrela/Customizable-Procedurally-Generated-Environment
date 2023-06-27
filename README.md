@@ -35,7 +35,6 @@
         <li><strong>💫 Persistence:</strong> The higher the value, the more the terrain will be affected by the octaves.</li>
         <li><strong>🎯 Pocket Threshold:</strong> The higher the value, the more likely the object will spawn in a pocket.</li>
     </ul>
-
     <h2 style="color: #4a86e8;">🏷️ Path Creator</h2>
     <ul style="padding-left: 25px;">
         <li><strong>🎁 Item Drop Rate:</strong> Determine how frequently an item will spawn.</li>
