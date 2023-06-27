@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Customizable Procedurally Generated Environment Documentation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        h1, h2 {
-            color: #333;
-        }
-    </style>
-</head>
-
-<body>
     <h1>Customizable Procedurally Generated Environment</h1>
     <p>Watch our small demo <a href="https://youtu.be/niXPKbuWB7I">here</a>.</p>
 
@@ -61,6 +45,3 @@
         <li><strong>Item Drop Rate:</strong> Determine how frequently an item will spawn.</li>
         <li><strong>Item to Drop:</strong> Specify which, if any, item to drop.</li>
     </ul>
-</body>
-
-</html>
