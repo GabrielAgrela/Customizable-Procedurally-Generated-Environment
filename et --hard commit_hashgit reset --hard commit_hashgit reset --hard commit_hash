@@ -1,0 +1,88 @@
+[33mcommit b7ee4dcb8d652180127e83eea2a196f0d8fbec82[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Sun Jun 25 17:29:03 2023 +0100
+
+    new shader for terrain
+
+[33mcommit 7ed2603f057b6e446de72c64b09d58a74f558714[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Sun Jun 25 17:24:48 2023 +0100
+
+    New shader for terrain (Allows the use of spotlight)
+
+[33mcommit 406fd49cc1d6aed11a8bf273ce79f9bd1ecdc644[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Sun Jun 25 12:41:39 2023 +0100
+
+    Fix pathmaker disapear
+
+[33mcommit 6f783152cf06513ecf4a3c3322ef8f0f90baa23e[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Thu Jun 22 10:46:06 2023 +0100
+
+    Demo in readme
+
+[33mcommit 7df25dcdaf81fb4147461ed97213353b6097b3ac[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Tue Jun 20 13:52:54 2023 +0100
+
+    more or less final version of minipaths
+
+[33mcommit 54e8c549c4a5e0a52ab23f499e3ae6ca1b4cbf94[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Mon Jun 19 22:42:49 2023 +0100
+
+    Rough version of secondary paths
+
+[33mcommit 745888e8e22b9c907931aab2c014a53eda59b1b5[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Mon Jun 19 15:12:10 2023 +0100
+
+    refactor
+
+[33mcommit c030a0a88eb67227bc76c90b67b3439e7292306a[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Mon Jun 19 15:11:24 2023 +0100
+
+    Fixed old bug causing the pathmaker not to move when generating new terrain
+    Finished implementing new generation if fail
+    Fixed old bug causing pathmaker to change wrong position when generating path
+
+[33mcommit 4ffab4983ee0f7cd0b5ac7a96491742e632ed0d1[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Sun Jun 18 19:38:21 2023 +0100
+
+    Navegatin baker refactor
+
+[33mcommit c6b7fb2431900b2f73d9ef38fc71b497cf2bd583[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Sun Jun 18 19:28:27 2023 +0100
+
+    Refactor SpawnVegetation
+
+[33mcommit 8501641dcf714506151b0a16ded9cf56a1b350e1[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Sun Jun 18 19:24:09 2023 +0100
+
+    Refactor Pathcreator
+
+[33mcommit 9bc93b268cb03d71e1ce7547f18548226a4b3958[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Sun Jun 18 19:12:04 2023 +0100
+
+    Refactor
+    bug fixes
+
+[33mcommit 8ad4abac4da0979714b3eba37b0d6172390fa96f[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Sun Jun 18 00:57:41 2023 +0100
+
+    refactor Meshgenerator
+    bug fixes
+    Applied fractal in vegetations
+
+[33mcommit da962345e1c88a2c3b6127bcd5f82e2105ae7621[m
+Author: Gabriel Agrela <100cabessa@gmail.com>
+Date:   Sat Jun 17 20:56:58 2023 +0100
+
+    first commit

@@ -4225,9 +4225,9 @@ GameObject:
   - component: {fileID: 1242147626}
   - component: {fileID: 1242147627}
   - component: {fileID: 1242147625}
-  - component: {fileID: 1242147628}
-  - component: {fileID: 1242147630}
   - component: {fileID: 1242147631}
+  - component: {fileID: 1242147630}
+  - component: {fileID: 1242147628}
   m_Layer: 6
   m_Name: Terrain(Clone)
   m_TagString: terrain
@@ -4472,7 +4472,7 @@ MonoBehaviour:
   numberOfWaypoints: 5
   directDistance: 2000
   lateralDeviation: 400
-  waypointPrefab: {fileID: 143550061}
+  waypointPrefab: {fileID: 5489479156919609704, guid: ec71cce125a3751468dc455438880a47, type: 3}
   waypoints: []
   numMiniPaths: 3
   Scout: {fileID: 6347984961915090732, guid: f9f8d429fdc3e7f4fbb93b9749ad5a3c, type: 3}
