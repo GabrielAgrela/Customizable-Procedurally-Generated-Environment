@@ -51,15 +51,15 @@ LODGroup:
   m_AnimateCrossFading: 1
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.69783264
+  - screenRelativeHeight: 0.5854845
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 8371789361930983463}
-  - screenRelativeHeight: 0.44625294
+  - screenRelativeHeight: 0.34174353
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 6503446975360757728}
-  - screenRelativeHeight: 0.13522385
+  - screenRelativeHeight: 0.12914741
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 988682482526247920}
@@ -110,7 +110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: d7ebb2b5789a2be45b7bd26b3b9d50aa, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 126
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: d7ebb2b5789a2be45b7bd26b3b9d50aa, type: 3}
       propertyPath: m_RootOrder
@@ -212,7 +212,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 23062208c1e1ace4d9e5270be8b68dcb, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 126
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 23062208c1e1ace4d9e5270be8b68dcb, type: 3}
       propertyPath: m_RootOrder
@@ -376,6 +376,10 @@ PrefabInstance:
     - target: {fileID: 2300000, guid: 78fdf95c4c2d7384a8957ee310d2b067, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 78fdf95c4c2d7384a8957ee310d2b067, type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4162569959868739906, guid: 78fdf95c4c2d7384a8957ee310d2b067, type: 3}
