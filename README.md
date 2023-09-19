@@ -1,5 +1,6 @@
-# 🌱 Customizable Procedurally Generated Environment Unity Package Optimized for Mobile
+
 <body style="background-color: #f9f9f9; font-family: Arial, sans-serif; color: #333;">
+    <h1 style="color: #4a86e8;">🌐 🌱 Customizable Procedurally Generated Environment Unity Package Optimized for Mobile</h1>
     <h2 style="color: #4a86e8;">🌐 Mesh Generator</h2>
     <ul style="padding-left: 25px;">
         <li><strong>🎨 Terrain Coloration:</strong> Attribute a color and a time to define when and what color that part of the mesh will be, in that normalized height. Note that the color is additive, not absolute.</li>
